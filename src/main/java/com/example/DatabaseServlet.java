@@ -16,18 +16,23 @@ public class DatabaseServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
+        out.println("<html><head><title>User Data</title></head><body>");
+        out.println("<h1>User Information</h1>");
+        out.println("<table border='1'><tr><th>Name</th><th>Email</th></tr>");
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://10.1.128.5:3306/mydatabase", "myuser",
                     "Password@123");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM users");
+            ResultSet rs = stmt.executeQuery("SELECT name, email FROM users");
             while (rs.next()) {
-                out.println(rs.getString(1) + " " + rs.getString(2) + "<br>");
+                out.println("<tr><td>" + rs.getString("name") + "</td><td>" + rs.getString("email") + "</td></tr>");
             }
             con.close();
         } catch (Exception e) {
-            out.println("Error: " + e.getMessage());
+            out.println("<tr><td colspan='2'>Error: " + e.getMessage() + "</td></tr>");
         }
+        out.println("</table>");
+        out.println("</body></html>");
     }
 }

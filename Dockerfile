@@ -1,20 +1,24 @@
-# Use an official Java runtime as a parent image
-FROM openjdk:11
+# Use an official Tomcat image
+FROM tomcat:9.0
 
-# Set the working directory in the container
-WORKDIR /app
+# Set the working directory
+WORKDIR /usr/local/tomcat
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the servlet API JAR to the lib directory
+COPY /path/to/jakarta.servlet-api-5.0.0.jar /usr/local/tomcat/lib/
 
-# Install the JDK and download the servlet API
-RUN apt-get update && apt-get install -y openjdk-11-jdk wget \
-    && wget https://repo1.maven.org/maven2/jakarta/servlet/jakarta.servlet-api/5.0.0/jakarta.servlet-api-5.0.0.jar -P /app
+# Copy the source code to the container
+COPY /app/src/main/java/com/example/ /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/com/example/
+
+# Install the JDK
+RUN apt-get update && apt-get install -y openjdk-11-jdk
 
 # Compile the Java application
-RUN javac -cp /app/jakarta.servlet-api-5.0.0.jar /app/src/main/java/com/example/DatabaseServlet.java
+RUN javac -cp /usr/local/tomcat/lib/jakarta.servlet-api-5.0.0.jar /usr/local/tomcat/webapps/ROOT/WEB-INF/classes/com/example/DatabaseServlet.java
 
-# Run the application
-CMD ["java", "-cp", "/app:/app/jakarta.servlet-api-5.0.0.jar", "com.example.DatabaseServlet"]
+# Expose the port Tomcat is running on
+EXPOSE 8080
 
+# Run Tomcat
+CMD ["catalina.sh", "run"]
 

@@ -21,7 +21,7 @@ public class DatabaseServlet extends HttpServlet {
         out.println("<table border='1'><tr><th>Name</th><th>Email</th></tr>");
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://10.1.128.5:3306/mydatabase", "myuser",
+            Connection con = DriverManager.getConnection("jdbc:mysql://my-mysql-container:3306/mydatabase", "myuser",
                     "Password@123");
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT name, email FROM users");
